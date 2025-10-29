@@ -152,6 +152,9 @@ class BeautifulSoupHTMLParser(HTMLParser, DetectsXMLParsedAsHTML):
             closing tag).
         """
         # TODO: handle namespaces here?
+        if self.soup.replacer and name == self.soup.replacer.og_tag:
+            name = self.soup.replacer.alt_tag
+
         attr_dict: AttributeDict = self.attribute_dict_class()
         for key, value in attrs:
             # Change None attribute values to the empty string
