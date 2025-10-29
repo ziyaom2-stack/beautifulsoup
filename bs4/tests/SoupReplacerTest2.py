@@ -3,7 +3,7 @@ from bs4.SoupReplacer import SoupReplacer
 
 
 def test_soupreplacer_xml():
-    # 这里使用 XML 示例内容，也可以改成读取文件
+    # XML
     xml_content = """<?xml version="1.0" encoding="utf-8"?>
 <root>
 <row>

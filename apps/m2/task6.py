@@ -2,7 +2,6 @@ import sys
 import os
 import time
 current_dir = os.path.dirname(__file__)
-# 假设项目根目录是 apps/m2/ 的上两级目录
 project_root = os.path.abspath(os.path.join(current_dir, '..', '..'))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
