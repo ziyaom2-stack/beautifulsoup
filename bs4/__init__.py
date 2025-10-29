@@ -53,6 +53,8 @@ __all__ = [
 from collections import Counter
 import sys
 import warnings
+from .SoupReplacer import SoupReplacer
+
 
 # The very first thing we do is give a useful error if someone is
 # running this code under Python 2.
@@ -128,6 +130,7 @@ from bs4._warnings import (
     UnusualUsageWarning,
     XMLParsedAsHTMLWarning,
 )
+
 
 
 class BeautifulSoup(Tag):
@@ -217,6 +220,8 @@ class BeautifulSoup(Tag):
         element_classes: Optional[Dict[Type[PageElement], Type[PageElement]]] = None,
         **kwargs: Any,
     ):
+
+        self.replacer = kwargs.pop('replacer', None)
         """Constructor.
 
         :param markup: A string or a file-like object representing
@@ -1016,6 +1021,10 @@ class BeautifulSoup(Tag):
         :meta private:
         """
         # print("Start tag %s: %s" % (name, attrs))
+        # if self.replacer and name == self.replacer.og_tag:
+        #     name = self.replacer.alt_tag
+
+
         self.endData()
 
         if (

@@ -74,6 +74,32 @@ find_next_sibling()        bs4/element.py: line 803        find the one next sib
    SoupStrainer()           bs4/filter.py: line 343         parse specific nodes
 
 
+#Part3
+In this part, I realized a new API names SoupReplacer, which does tag replacement during the parsing period
+rather than after the parse tree was fully constructed. This operation is likely to avoid transversing the
+tree so it can improve the performance of replacing the tags.
+
+Operation on the code:
+bs4/__init__.py: I added an argument replacer to the constructor.
+bs/builder/_htmlparser.py and bs/builder/_lxml: I added logic to replace tags during start or 
+handle_starttag events.
+bs4/SoupReplacer.py: I wrote the operation of the replace logic.
+bs4/SoupReplacerTest1 and /bs4/SoupReplacerTest2.py: I did pytest with both html and xml files to ensure
+the function API is correct.
+apps/m2/task6: I rewrote the task6 in milestone1 with SoupReplacer and compared the performance.
+the way to run the files: python task6.py [file name]
+   file size/type         task6 with SoupReplacer runtime    task6 without SoupReplacer runtime
+    335.3MB /xml                       7.06seconds                      12.25seconds
+    1.18GB  /xml                      47.26seconds                     109.30seconds
+    106.8MB /xml                       3.08seconds                       3.59seconds
+    775.6MB /xml                      10.50seconds                      13.62seconds
+     5.24MB/html                       0.15seconds                       0.15seconds
+        4KB/html                       0.00second                        0.00second
+
+Conclusion: The SoupReplacer successfully dealt with both html and xml files. And the performance which
+is measured by the time used to generate the output improves more obvious on larger files than smaller 
+files.
+
 
    
 

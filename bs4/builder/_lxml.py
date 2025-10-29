@@ -321,6 +321,7 @@ class LXMLTreeBuilderForXML(TreeBuilder):
         assert self.soup is not None
         assert isinstance(tag, str)
 
+
         # We need to recreate the attribute dict for three
         # reasons. First, for type checking, so we can assert there
         # are no bytestrings in the keys or values. Second, because we
@@ -390,6 +391,8 @@ class LXMLTreeBuilderForXML(TreeBuilder):
 
         namespace, tag = self._getNsTag(tag)
         nsprefix = self._prefix_for_namespace(namespace)
+        if self.soup.replacer and tag == self.soup.replacer.og_tag:
+            tag = self.soup.replacer.alt_tag
         self.soup.handle_starttag(
             tag,
             namespace,
