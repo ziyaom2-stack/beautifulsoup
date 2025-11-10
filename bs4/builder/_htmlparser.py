@@ -152,8 +152,18 @@ class BeautifulSoupHTMLParser(HTMLParser, DetectsXMLParsedAsHTML):
             closing tag).
         """
         # TODO: handle namespaces here?
-        if self.soup.replacer and name == self.soup.replacer.og_tag:
-            name = self.soup.replacer.alt_tag
+        #replace operation
+        if self.soup.replacer:
+            if self.soup.replacer.og_tag and name == self.soup.replacer.og_tag:
+                name = self.soup.replacer.alt_tag
+            if self.soup.replacer.name_xformer:
+                temp_tag = type('TempTag', (), {
+                'name': name,
+                'attrs': dict(attrs) if attrs else {}
+            })()
+                new_name = self.soup.replacer.name_xformer(temp_tag)
+                if new_name is not None:
+                    name = new_name
 
         attr_dict: AttributeDict = self.attribute_dict_class()
         for key, value in attrs:
@@ -185,6 +195,17 @@ class BeautifulSoupHTMLParser(HTMLParser, DetectsXMLParsedAsHTML):
         tag = self.soup.handle_starttag(
             name, None, None, attr_dict, sourceline=sourceline, sourcepos=sourcepos
         )
+
+        if self.soup.replacer and tag:
+            # M3: attrs_xformer
+            if self.soup.replacer.attrs_xformer:
+                new_attrs = self.soup.replacer.attrs_xformer(tag)
+                if new_attrs is not None:
+                    tag.attrs = new_attrs
+
+            # M3: xformer
+            if self.soup.replacer.xformer:
+                self.soup.replacer.xformer(tag)
         if tag and tag.is_empty_element and handle_empty_element:
             # Unlike other parsers, html.parser doesn't send separate end tag
             # events for empty-element tags. (It's handled in
@@ -213,6 +234,17 @@ class BeautifulSoupHTMLParser(HTMLParser, DetectsXMLParsedAsHTML):
            e.g. '<tag></tag>'.
         """
         # print("END", name)
+        if self.soup.replacer:
+            if self.soup.replacer.og_tag and name == self.soup.replacer.og_tag:
+                name = self.soup.replacer.alt_tag
+            if self.soup.replacer.name_xformer:
+                temp_tag = type('TempTag', (), {
+                    'name': name,
+                    'attrs': {}
+                })()
+                new_name = self.soup.replacer.name_xformer(temp_tag)
+                if new_name is not None:
+                    name = new_name
         if check_already_closed and name in self.already_closed_empty_element:
             # This is a redundant end tag for an empty-element tag.
             # We've already called handle_endtag() for it, so just

@@ -221,6 +221,7 @@ class BeautifulSoup(Tag):
         **kwargs: Any,
     ):
 
+        # Store replacer for use during parsing
         self.replacer = kwargs.pop('replacer', None)
         """Constructor.
 
@@ -1020,9 +1021,6 @@ class BeautifulSoup(Tag):
 
         :meta private:
         """
-        # print("Start tag %s: %s" % (name, attrs))
-        # if self.replacer and name == self.replacer.og_tag:
-        #     name = self.replacer.alt_tag
 
 
         self.endData()

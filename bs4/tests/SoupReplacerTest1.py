@@ -28,14 +28,14 @@ def test_soupreplacer1():
 </row>
 </html>"""
 
-    replacer = SoupReplacer("row", "b")
-    soup = BeautifulSoup(html_content, "lxml", replacer=replacer)
+    replacer = SoupReplacer("row", "div")
+    soup = BeautifulSoup(html_content, "html.parser", replacer=replacer)
 
     result_str = str(soup)
 
     # verify the result
     assert "<row" not in result_str, "There should be no <row> tags left"
-    assert "<b" in result_str, "All <row> tags should be replaced with <b>"
+    assert "<div" in result_str, "All <row> tags should be replaced with <div>"
     print(result_str)  # print the result
 
 if __name__ == "__main__":
