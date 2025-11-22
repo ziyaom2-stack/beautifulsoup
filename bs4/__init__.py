@@ -221,7 +221,6 @@ class BeautifulSoup(Tag):
         **kwargs: Any,
     ):
 
-        # Store replacer for use during parsing
         self.replacer = kwargs.pop('replacer', None)
         """Constructor.
 
@@ -494,6 +493,24 @@ class BeautifulSoup(Tag):
         # reference to this object.
         self.markup = None
         self.builder.soup = None
+
+    def __iter__(self):
+
+        return self._traverse_tree()
+
+    def _traverse_tree(self):
+
+        #use dfs to traverse the tree
+        stack = [self]
+
+        while stack:
+            current = stack.pop()
+            yield current
+
+            if hasattr(current, 'contents') and current.contents:
+                # add reversely
+                for child in reversed(current.contents):
+                    stack.append(child)
 
     def copy_self(self) -> "BeautifulSoup":
         """Create a new BeautifulSoup object with the same TreeBuilder,

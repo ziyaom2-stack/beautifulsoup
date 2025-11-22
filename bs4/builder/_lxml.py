@@ -391,7 +391,7 @@ class LXMLTreeBuilderForXML(TreeBuilder):
 
         namespace, tag = self._getNsTag(tag)
         nsprefix = self._prefix_for_namespace(namespace)
-        # ========== M2 + M3: 标签名转换 ==========
+        # replace label name
         if self.soup.replacer:
             # M2: replace
             if self.soup.replacer.og_tag and tag == self.soup.replacer.og_tag:
@@ -406,20 +406,20 @@ class LXMLTreeBuilderForXML(TreeBuilder):
                 new_name = self.soup.replacer.name_xformer(temp_tag)
                 if new_name is not None:
                     tag = new_name
-            created_tag=self.soup.handle_starttag(
-                tag,
-                namespace,
-                nsprefix,
-                final_attrs,
-                namespaces=self.active_namespace_prefixes[-1],
-            )
-            #  M3: attrs_xformer
-            if self.soup.replacer and created_tag:
-                # M3: attrs_xformer
-                if self.soup.replacer.attrs_xformer:
-                    new_attrs = self.soup.replacer.attrs_xformer(created_tag)
-                    if new_attrs is not None:
-                        created_tag.attrs = new_attrs
+        created_tag=self.soup.handle_starttag(
+            tag,
+            namespace,
+            nsprefix,
+            final_attrs,
+            namespaces=self.active_namespace_prefixes[-1],
+        )
+        #  M3: attrs_xformer
+        if self.soup.replacer and created_tag:
+            # M3: attrs_xformer
+            if self.soup.replacer.attrs_xformer:
+                new_attrs = self.soup.replacer.attrs_xformer(created_tag)
+                if new_attrs is not None:
+                    created_tag.attrs = new_attrs
 
                 # M3: xformer
                 if self.soup.replacer.xformer:
@@ -428,7 +428,7 @@ class LXMLTreeBuilderForXML(TreeBuilder):
     def _prefix_for_namespace(
         self, namespace: Optional[_NamespaceURL]
     ) -> Optional[_NamespacePrefix]:
-        """Find the currently active prefix for the given namespace."""
+
         if namespace is None:
             return None
         for inverted_nsmap in reversed(self.nsmaps):
