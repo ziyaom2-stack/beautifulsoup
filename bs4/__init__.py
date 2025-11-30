@@ -1038,8 +1038,6 @@ class BeautifulSoup(Tag):
 
         :meta private:
         """
-
-
         self.endData()
 
         if (
