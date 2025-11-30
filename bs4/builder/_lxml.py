@@ -421,14 +421,13 @@ class LXMLTreeBuilderForXML(TreeBuilder):
                 if new_attrs is not None:
                     created_tag.attrs = new_attrs
 
-                # M3: xformer
-                if self.soup.replacer.xformer:
+             # M3: xformer
+            if self.soup.replacer.xformer:
                     self.soup.replacer.xformer(created_tag)
 
     def _prefix_for_namespace(
         self, namespace: Optional[_NamespaceURL]
     ) -> Optional[_NamespacePrefix]:
-
         if namespace is None:
             return None
         for inverted_nsmap in reversed(self.nsmaps):
