@@ -221,6 +221,7 @@ class BeautifulSoup(Tag):
         **kwargs: Any,
     ):
 
+        #pop the replacer to avoid influencing other functions
         self.replacer = kwargs.pop('replacer', None)
         """Constructor.
 

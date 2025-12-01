@@ -154,16 +154,10 @@ class BeautifulSoupHTMLParser(HTMLParser, DetectsXMLParsedAsHTML):
         # TODO: handle namespaces here?
         #replace operation
         if self.soup.replacer:
+            #Milestone 2
             if self.soup.replacer.og_tag and name == self.soup.replacer.og_tag:
                 name = self.soup.replacer.alt_tag
-            if self.soup.replacer.name_xformer:
-                temp_tag = type('TempTag', (), {
-                'name': name,
-                'attrs': dict(attrs) if attrs else {}
-            })()
-                new_name = self.soup.replacer.name_xformer(temp_tag)
-                if new_name is not None:
-                    name = new_name
+
 
         attr_dict: AttributeDict = self.attribute_dict_class()
         for key, value in attrs:
@@ -197,7 +191,12 @@ class BeautifulSoupHTMLParser(HTMLParser, DetectsXMLParsedAsHTML):
         )
 
         if self.soup.replacer and tag:
-            # M3: attrs_xformer
+            #Milestone 3: name_xformer
+            if self.soup.replacer.name_xformer:
+                new_name = self.soup.replacer.name_xformer(tag)
+                if new_name is not None:
+                    tag.name = new_name
+            # Milestone 3: attrs_xformer
             if self.soup.replacer.attrs_xformer:
                 new_attrs = self.soup.replacer.attrs_xformer(tag)
                 if new_attrs is not None:
@@ -234,17 +233,10 @@ class BeautifulSoupHTMLParser(HTMLParser, DetectsXMLParsedAsHTML):
            e.g. '<tag></tag>'.
         """
         # print("END", name)
+        #Milestone2
         if self.soup.replacer:
             if self.soup.replacer.og_tag and name == self.soup.replacer.og_tag:
                 name = self.soup.replacer.alt_tag
-            if self.soup.replacer.name_xformer:
-                temp_tag = type('TempTag', (), {
-                    'name': name,
-                    'attrs': {}
-                })()
-                new_name = self.soup.replacer.name_xformer(temp_tag)
-                if new_name is not None:
-                    name = new_name
         if check_already_closed and name in self.already_closed_empty_element:
             # This is a redundant end tag for an empty-element tag.
             # We've already called handle_endtag() for it, so just

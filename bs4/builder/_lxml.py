@@ -397,15 +397,6 @@ class LXMLTreeBuilderForXML(TreeBuilder):
             if self.soup.replacer.og_tag and tag == self.soup.replacer.og_tag:
                 tag = self.soup.replacer.alt_tag
 
-            # M3: name_xformer
-            if self.soup.replacer.name_xformer:
-                temp_tag = type('TempTag', (), {
-                    'name': tag,
-                    'attrs': dict(final_attrs) if final_attrs else {}
-                })()
-                new_name = self.soup.replacer.name_xformer(temp_tag)
-                if new_name is not None:
-                    tag = new_name
         created_tag=self.soup.handle_starttag(
             tag,
             namespace,
@@ -416,6 +407,11 @@ class LXMLTreeBuilderForXML(TreeBuilder):
         #  M3: attrs_xformer
         if self.soup.replacer and created_tag:
             # M3: attrs_xformer
+            if self.soup.replacer.name_xformer:
+                new_name = self.soup.replacer.name_xformer(created_tag)
+                if new_name is not None:
+                    created_tag.name = new_name
+
             if self.soup.replacer.attrs_xformer:
                 new_attrs = self.soup.replacer.attrs_xformer(created_tag)
                 if new_attrs is not None:
@@ -445,15 +441,6 @@ class LXMLTreeBuilderForXML(TreeBuilder):
             if self.soup.replacer.og_tag and name == self.soup.replacer.og_tag:
                 name = self.soup.replacer.alt_tag
 
-            # M3: name_xformer
-            if self.soup.replacer.name_xformer:
-                temp_tag = type('TempTag', (), {
-                    'name': name,
-                    'attrs': {}
-                })()
-                new_name = self.soup.replacer.name_xformer(temp_tag)
-                if new_name is not None:
-                    name = new_name
         nsprefix = None
         if namespace is not None:
             for inverted_nsmap in reversed(self.nsmaps):
