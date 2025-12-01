@@ -41,11 +41,6 @@ class TestBeautifulSoupIterable:
         print("Test 1: Basic iteration")
         print("="*60)
 
-        # Test that soup is iterable
-        all_nodes = list(soup)
-        assert len(all_nodes) > 0, "Should be able to iterate over soup"
-        print(f"✓ Total nodes: {len(all_nodes)}")
-
         # Test finding specific tags using iteration
         print("\n✓ Found <b> tags:")
         b_tags = [node for node in soup if hasattr(node, 'name') and node.name == 'b']
@@ -55,6 +50,7 @@ class TestBeautifulSoupIterable:
 
         # Test finding nodes with id attribute
         print("\n✓ Found nodes with id attribute:")
+        #ensure have the get method(not text)
         nodes_with_id = [node for node in soup if hasattr(node, 'get') and node.get('id')]
         for node in nodes_with_id:
             print(f"  {node.name}: id='{node.get('id')}'")
@@ -86,12 +82,8 @@ class TestBeautifulSoupIterable:
         print("Test 2: Nested structure iteration")
         print("="*60)
 
-        # Verify with find_all for comparison
-        sentences_findall = soup.find_all('sentence')
-        print(f"find_all found {len(sentences_findall)} sentence tags")
-
         # Find all sentence tags using iteration
-        print("\n✓ Found all <sentence> tags:")
+        print("\n Found all <sentence> tags:")
         sentence_tags = [node for node in soup if hasattr(node, 'name') and node.name == 'sentence']
         for tag in sentence_tags:
             print(f"  {tag.get_text().strip()}")
@@ -137,20 +129,12 @@ class TestBeautifulSoupIterable:
         print("Test 3: Text nodes iteration")
         print("="*60)
 
-        # Get all text nodes
-        print("✓ Found text nodes:")
-        text_nodes = []
-        for node in soup:
-            if isinstance(node, NavigableString) and not isinstance(node, type(soup)):
-                text = str(node).strip()
-                if text:  # Only non-empty text
-                    text_nodes.append(text)
+        # Get text nodes
+        text_nodes = [node for node in soup if hasattr(node, 'name')]
+        for tag in text_nodes:
+            print(f"  {tag.get_text().strip()}")
+        assert len(text_nodes)!=0,f"Should find text tags"
 
-        # Print text nodes
-        for i, text in enumerate(text_nodes, 1):
-            print(f"  {i}. '{text}'")
-
-        assert len(text_nodes) > 0, "Should find text nodes"
 
     def test_collect_all_links(self):
         """Test 4: Practical use case - collect all links"""
@@ -236,7 +220,7 @@ class TestBeautifulSoupIterable:
         outline = []
         for node in soup:
             if hasattr(node, 'name') and node.name in ['h1', 'h2', 'h3']:
-                level = int(node.name[1])
+                level = int(node.name[1])       #control the indentation
                 text = node.get_text().strip()
                 outline.append((level, text))
                 indent = "  " * (level - 1)

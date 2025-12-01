@@ -507,7 +507,7 @@ class BeautifulSoup(Tag):
         while stack:
             current = stack.pop()
             yield current
-            #checking whether current node has child
+            #checking whether current node has child and not empty
             if hasattr(current, 'contents') and current.contents:
                 # add reversely
                 for child in reversed(current.contents):
