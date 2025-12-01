@@ -397,6 +397,7 @@ class LXMLTreeBuilderForXML(TreeBuilder):
             if self.soup.replacer.og_tag and tag == self.soup.replacer.og_tag:
                 tag = self.soup.replacer.alt_tag
 
+        #create the tag
         created_tag=self.soup.handle_starttag(
             tag,
             namespace,
@@ -406,7 +407,7 @@ class LXMLTreeBuilderForXML(TreeBuilder):
         )
         #  M3: attrs_xformer
         if self.soup.replacer and created_tag:
-            # M3: attrs_xformer
+            # Milestone 3: attrs_xformer
             if self.soup.replacer.name_xformer:
                 new_name = self.soup.replacer.name_xformer(created_tag)
                 if new_name is not None:
@@ -437,7 +438,7 @@ class LXMLTreeBuilderForXML(TreeBuilder):
         self.soup.endData()
         namespace, name = self._getNsTag(name)
         if self.soup.replacer:
-            # M2: simply replace
+            # Milestone 2: simply replace
             if self.soup.replacer.og_tag and name == self.soup.replacer.og_tag:
                 name = self.soup.replacer.alt_tag
 

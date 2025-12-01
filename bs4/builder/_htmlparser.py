@@ -152,13 +152,13 @@ class BeautifulSoupHTMLParser(HTMLParser, DetectsXMLParsedAsHTML):
             closing tag).
         """
         # TODO: handle namespaces here?
-        #replace operation
+        #replace operation before creating the tag
         if self.soup.replacer:
-            #Milestone 2
+            #Milestone 2  og_tag exist and current name == og tag
             if self.soup.replacer.og_tag and name == self.soup.replacer.og_tag:
                 name = self.soup.replacer.alt_tag
 
-
+        #create tag
         attr_dict: AttributeDict = self.attribute_dict_class()
         for key, value in attrs:
             # Change None attribute values to the empty string
@@ -193,17 +193,20 @@ class BeautifulSoupHTMLParser(HTMLParser, DetectsXMLParsedAsHTML):
         if self.soup.replacer and tag:
             #Milestone 3: name_xformer
             if self.soup.replacer.name_xformer:
+                #get the new name
                 new_name = self.soup.replacer.name_xformer(tag)
                 if new_name is not None:
                     tag.name = new_name
             # Milestone 3: attrs_xformer
             if self.soup.replacer.attrs_xformer:
+                #get the new attribute
                 new_attrs = self.soup.replacer.attrs_xformer(tag)
                 if new_attrs is not None:
                     tag.attrs = new_attrs
 
-            # M3: xformer
+            # Milestone 3: xformer
             if self.soup.replacer.xformer:
+                #operate directly
                 self.soup.replacer.xformer(tag)
         if tag and tag.is_empty_element and handle_empty_element:
             # Unlike other parsers, html.parser doesn't send separate end tag
