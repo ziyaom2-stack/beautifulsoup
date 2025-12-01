@@ -65,14 +65,11 @@ class TestSoupReplacerMilestone3:
     def test_name_xformer_html(self):
         """Test 1: name_xformer with HTML - transform b to strong, i to em"""
 
-        def transform_tags(tag):
-            if tag.name == "b":
-                return "strong"
-            elif tag.name == "i":
-                return "em"
-            return tag.name
-
-        replacer = SoupReplacer(name_xformer=transform_tags)
+        replacer = SoupReplacer(
+            name_xformer=lambda tag: "strong" if tag.name == "b"
+            else "em" if tag.name == "i"
+            else tag.name
+        )
         soup = BeautifulSoup(self.HTML_CONTENT, "html.parser", replacer=replacer)
         result_str = str(soup)
 
