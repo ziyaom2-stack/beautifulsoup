@@ -191,23 +191,34 @@ class BeautifulSoupHTMLParser(HTMLParser, DetectsXMLParsedAsHTML):
         )
 
         if self.soup.replacer and tag:
-            #Milestone 3: name_xformer
+            # Milestone 3: name_xformer
             if self.soup.replacer.name_xformer:
-                #get the new name
-                new_name = self.soup.replacer.name_xformer(tag)
-                if new_name is not None:
-                    tag.name = new_name
+                try:
+                    new_name = self.soup.replacer.name_xformer(tag)
+                    # judge whether it is empty
+                    if new_name is not None and isinstance(new_name, str) and new_name.strip():
+                        tag.name = new_name
+                    # illegal condition
+                except Exception:
+                    pass
+
             # Milestone 3: attrs_xformer
             if self.soup.replacer.attrs_xformer:
-                #get the new attribute
-                new_attrs = self.soup.replacer.attrs_xformer(tag)
-                if new_attrs is not None:
-                    tag.attrs = new_attrs
+                try:
+                    new_attrs = self.soup.replacer.attrs_xformer(tag)
+                    # must be dictionary
+                    if new_attrs is not None and isinstance(new_attrs, dict):
+                        tag.attrs = new_attrs
+                    # illegal
+                except Exception:
+                    pass
 
             # Milestone 3: xformer
             if self.soup.replacer.xformer:
-                #operate directly
-                self.soup.replacer.xformer(tag)
+                try:
+                    self.soup.replacer.xformer(tag)
+                except Exception:
+                    pass
         if tag and tag.is_empty_element and handle_empty_element:
             # Unlike other parsers, html.parser doesn't send separate end tag
             # events for empty-element tags. (It's handled in

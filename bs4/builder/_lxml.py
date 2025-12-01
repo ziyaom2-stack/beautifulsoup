@@ -405,23 +405,34 @@ class LXMLTreeBuilderForXML(TreeBuilder):
             final_attrs,
             namespaces=self.active_namespace_prefixes[-1],
         )
-        #  M3: attrs_xformer
+        # M3: attrs_xformer
         if self.soup.replacer and created_tag:
-            # Milestone 3: attrs_xformer
+            # Milestone 3: name_xformer
             if self.soup.replacer.name_xformer:
-                new_name = self.soup.replacer.name_xformer(created_tag)
-                if new_name is not None:
-                    created_tag.name = new_name
+                try:
+                    new_name = self.soup.replacer.name_xformer(created_tag)
+                    # string
+                    if new_name is not None and isinstance(new_name, str) and new_name.strip():
+                        created_tag.name = new_name
+                except Exception:
+                    pass
 
+            # Milestone 3: attrs_xformer
             if self.soup.replacer.attrs_xformer:
-                new_attrs = self.soup.replacer.attrs_xformer(created_tag)
-                if new_attrs is not None:
-                    created_tag.attrs = new_attrs
+                try:
+                    new_attrs = self.soup.replacer.attrs_xformer(created_tag)
+                    # must be dictionary
+                    if new_attrs is not None and isinstance(new_attrs, dict):
+                        created_tag.attrs = new_attrs
+                except Exception:
+                    pass
 
-             # M3: xformer
+            # M3: xformer
             if self.soup.replacer.xformer:
+                try:
                     self.soup.replacer.xformer(created_tag)
-
+                except Exception:
+                    pass
     def _prefix_for_namespace(
         self, namespace: Optional[_NamespaceURL]
     ) -> Optional[_NamespacePrefix]:

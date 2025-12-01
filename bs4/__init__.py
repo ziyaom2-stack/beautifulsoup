@@ -496,22 +496,26 @@ class BeautifulSoup(Tag):
         self.builder.soup = None
 
     def __iter__(self):
-
         return self._traverse_tree()
 
     def _traverse_tree(self):
+        # root
+        yield self
 
-        #use dfs to traverse the tree
-        stack = [self]
+        # if has child,traverse every child
+        if hasattr(self, 'contents') and self.contents:
+            for child in self.contents:
+                #resursion of every child
+                yield from self._traverse_child(child)
 
-        while stack:
-            current = stack.pop()
-            yield current
-            #checking whether current node has child and not empty
-            if hasattr(current, 'contents') and current.contents:
-                # add reversely
-                for child in reversed(current.contents):
-                    stack.append(child)
+    def _traverse_child(self, node):
+        # yield current node
+        yield node
+
+        # if have child, go on recursion
+        if hasattr(node, 'contents') and node.contents:
+            for child in node.contents:
+                yield from self._traverse_child(child)
 
     def copy_self(self) -> "BeautifulSoup":
         """Create a new BeautifulSoup object with the same TreeBuilder,
